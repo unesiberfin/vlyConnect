@@ -13,6 +13,7 @@ var JOINED_KEY  = 'vlyconnect_joined';
 // =============================================
 
 function getGames() {
+  // Read saved games from localStorage.
   var stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     return JSON.parse(stored);
@@ -21,10 +22,12 @@ function getGames() {
 }
 
 function saveGames(games) {
+  // Turn the array into text so localStorage can save it.
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
 }
 
 function getJoined() {
+  // Read the list of games the current user has joined.
   var stored = localStorage.getItem(JOINED_KEY);
   if (stored) {
     return JSON.parse(stored);
@@ -56,6 +59,7 @@ function removeJoined(id) {
 }
 
 function formatDate(dateStr) {
+  // Build a date from the saved text, then format it nicely for the page.
   var date = new Date(dateStr + 'T00:00');
   return date.toLocaleDateString('en-CA', {
     weekday: 'short',
@@ -66,6 +70,7 @@ function formatDate(dateStr) {
 }
 
 function formatTime(timeStr) {
+  // Change 24-hour time like "14:00" into 12-hour time like "2:00 PM".
   var parts   = timeStr.split(':');
   var hours   = parseInt(parts[0], 10);
   var minutes = parts[1];
@@ -75,6 +80,7 @@ function formatTime(timeStr) {
 }
 
 function escapeHTML(str) {
+  // Put text into a safe element first so HTML tags are not treated as real HTML.
   var div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
@@ -95,6 +101,7 @@ function showToast(message, type) {
 // =============================================
 
 function getParam(name) {
+  // Read a value from the URL, like the game id in game.html?id=123.
   var params = new URLSearchParams(window.location.search);
   return params.get(name);
 }
@@ -108,6 +115,7 @@ function renderDetail(game) {
   var container = document.getElementById('detail-content');
   var joined    = hasJoined(game.id);
 
+  // These values help decide what text, colours, and buttons to show.
   var isFull     = game.spotsLeft === 0;
   var pct        = Math.round((game.spotsLeft / game.totalSpots) * 100);
   var skillClass = 'skill-' + game.skill.toLowerCase().replace(/\s+/g, '-');
@@ -131,7 +139,7 @@ function renderDetail(game) {
 
   var mapsURL = 'https://www.google.com/maps/search/' + encodeURIComponent(game.location);
 
-  // Show Leave if joined, Join if not, Full if no spots and not joined
+  // Show the right main button for the current game state.
   var actionBtn;
   if (joined) {
     actionBtn = '<button class="btn btn-leave" onclick="handleLeave()">Leave Game</button>';
@@ -194,6 +202,7 @@ function handleJoin() {
   var games = getGames();
   var game  = null;
 
+  // Find the game shown on this page.
   for (var i = 0; i < games.length; i++) {
     if (games[i].id === currentGameId) {
       game = games[i];
@@ -203,6 +212,7 @@ function handleJoin() {
 
   if (!game || game.spotsLeft === 0) return;
 
+  // Update the saved game data, then redraw the page.
   game.spotsLeft -= 1;
   saveGames(games);
   addJoined(currentGameId);
@@ -219,7 +229,7 @@ function handleJoin() {
   }
 }
 
-// Leave: show confirmation popup first
+// Ask first so the user does not leave by accident.
 function handleLeave() {
   showConfirm({
     title:   'Leave this game?',
@@ -252,9 +262,11 @@ function handleLeave() {
 }
 
 function handleCopyLink() {
+  // Try the modern clipboard tool first.
   navigator.clipboard.writeText(window.location.href).then(function () {
     showToast('Link copied to clipboard!', 'info');
   }).catch(function () {
+    // Fallback for browsers where the clipboard tool is not available.
     var input = document.createElement('input');
     input.value = window.location.href;
     document.body.appendChild(input);
@@ -272,6 +284,7 @@ function handleDelete() {
     okLabel: 'Delete',
     type:    'danger'
   }, function () {
+    // Remove this game from the saved array, then go back to the main page.
     var games = getGames().filter(function (g) {
       return g.id !== currentGameId;
     });
@@ -290,6 +303,7 @@ function handleDelete() {
 function init() {
   var idParam = getParam('id');
 
+  // If there is no id in the URL, send the user to the 404 page.
   if (!idParam) {
     window.location.href = '404.html';
     return;
@@ -299,6 +313,7 @@ function init() {
   var games = getGames();
   var game  = null;
 
+  // Find the game that matches the id from the URL.
   for (var i = 0; i < games.length; i++) {
     if (games[i].id === id) {
       game = games[i];
@@ -311,6 +326,7 @@ function init() {
     return;
   }
 
+  // Save the current id so the button functions know which game to edit.
   currentGameId = id;
   renderDetail(game);
 }

@@ -12,11 +12,13 @@ var JOINED_KEY  = 'vlyconnect_joined';
 // ---- Games storage ----
 
 function getGames() {
+  // Get the saved games text and turn it back into an array.
   var stored = localStorage.getItem(STORAGE_KEY);
   return stored ? JSON.parse(stored) : [];
 }
 
 function saveGames(games) {
+  // localStorage can only save text, so we convert the array to JSON first.
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
 }
 
@@ -25,6 +27,7 @@ function saveGames(games) {
 // Stores an array of game IDs the current user has joined.
 
 function getJoined() {
+  // Read the list of joined game ids from localStorage.
   var stored = localStorage.getItem(JOINED_KEY);
   return stored ? JSON.parse(stored) : [];
 }
@@ -39,6 +42,7 @@ function hasJoined(id) {
 
 function addJoined(id) {
   var joined = getJoined();
+  // Only add the id once.
   if (joined.indexOf(id) === -1) {
     joined.push(id);
     saveJoined(joined);
@@ -54,6 +58,7 @@ function removeJoined(id) {
 
 // "2026-04-20" → "Mon, Apr 20, 2026"
 function formatDate(dateStr) {
+  // Create a Date object, then turn it into friendly text for the UI.
   var date = new Date(dateStr + 'T00:00');
   return date.toLocaleDateString('en-CA', {
     weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
@@ -62,6 +67,7 @@ function formatDate(dateStr) {
 
 // "14:00" → "2:00 PM"
 function formatTime(timeStr) {
+  // Split the saved time into hours and minutes.
   var parts  = timeStr.split(':');
   var hours  = parseInt(parts[0], 10);
   var mins   = parts[1];
@@ -72,6 +78,7 @@ function formatTime(timeStr) {
 
 // Returns true if the game is still in the future
 function isUpcoming(game) {
+  // Compare the game's date and time to the current moment.
   return new Date(game.date + 'T' + game.time) > new Date();
 }
 
@@ -97,6 +104,7 @@ function escapeHTML(str) {
 //   });
 
 function showConfirm(options, onConfirm) {
+  // Use the values passed in, or fall back to default text.
   var title   = options.title   || 'Are you sure?';
   var message = options.message || '';
   var okLabel = options.okLabel || 'Confirm';
@@ -121,17 +129,18 @@ function showConfirm(options, onConfirm) {
   }
   okBtn.textContent   = okLabel;
 
-  // Swap colour accent via CSS custom property
+  // Change the dialog colour to match the action type.
   dialog.style.setProperty('--confirm-accent', type === 'danger' ? 'var(--error)' : 'var(--navy)');
   okBtn.className = 'btn ' + (type === 'danger' ? 'btn-confirm-danger' : 'btn-confirm-warning');
 
-  // Show
+  // Show the dialog and stop the page behind it from scrolling.
   backdrop.classList.add('open');
   dialog.classList.add('open');
   document.body.style.overflow = 'hidden';
   setTimeout(function () { cancelBtn.focus(); }, 50);
 
   function closeDialog() {
+    // Hide the dialog and remove old button actions.
     backdrop.classList.remove('open');
     dialog.classList.remove('open');
     document.body.style.overflow = '';
@@ -154,6 +163,7 @@ function showConfirm(options, onConfirm) {
 function showToast(message, type) {
   var toast = document.getElementById('toast');
   if (!toast) return;
+  // Add classes so CSS can style and animate the toast.
   toast.textContent = message;
   toast.className   = 'toast toast-' + type + ' toast-show';
   setTimeout(function () { toast.classList.remove('toast-show'); }, 3000);
@@ -167,6 +177,7 @@ function seedSampleGames() {
   var today = new Date();
 
   function daysFromNow(n) {
+    // Make a new date that is n days after today.
     var d = new Date(today);
     d.setDate(d.getDate() + n);
     return d.toISOString().split('T')[0];

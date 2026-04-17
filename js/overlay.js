@@ -8,6 +8,7 @@
 // buttons in the HTML via onclick="openOverlay()"
 
 function openOverlay() {
+  // Show the dark background and the form panel.
   document.getElementById('overlay-backdrop').classList.add('open');
   document.getElementById('overlay-panel').classList.add('open');
   // Stop the page from scrolling while the modal is open
@@ -20,6 +21,7 @@ function openOverlay() {
 }
 
 function closeOverlay() {
+  // Hide the modal and clear old form state.
   document.getElementById('overlay-backdrop').classList.remove('open');
   document.getElementById('overlay-panel').classList.remove('open');
   document.body.style.overflow = '';
@@ -32,6 +34,7 @@ function closeOverlay() {
 
 function clearOverlayErrors() {
   var fields = ['ov-location', 'ov-date', 'ov-time', 'ov-skill', 'ov-spots'];
+  // Loop through each field and remove any old error styles or messages.
   fields.forEach(function (id) {
     var el  = document.getElementById(id);
     var err = document.getElementById(id + '-error');
@@ -41,6 +44,7 @@ function clearOverlayErrors() {
 }
 
 function setOverlayError(fieldId, message) {
+  // Mark one field as invalid and show its message.
   var el  = document.getElementById(fieldId);
   var err = document.getElementById(fieldId + '-error');
   if (el)  el.classList.add('input-error');
@@ -51,6 +55,7 @@ function validateOverlayForm() {
   clearOverlayErrors();
   var ok = true;
 
+  // Read the current values from the form.
   var location = document.getElementById('ov-location').value.trim();
   var date     = document.getElementById('ov-date').value;
   var time     = document.getElementById('ov-time').value;
@@ -62,6 +67,7 @@ function validateOverlayForm() {
   if (!date) {
     setOverlayError('ov-date', 'Please pick a date.'); ok = false;
   } else {
+    // Do not allow dates in the past.
     var chosen = new Date(date + 'T00:00');
     var today  = new Date(); today.setHours(0, 0, 0, 0);
     if (chosen < today) { setOverlayError('ov-date', 'Date must be today or later.'); ok = false; }
@@ -73,6 +79,7 @@ function validateOverlayForm() {
   if (!spots) {
     setOverlayError('ov-spots', 'Please enter a number of spots.'); ok = false;
   } else if (parseInt(spots, 10) < 1 || parseInt(spots, 10) > 30) {
+    // Keep the number of spots in a reasonable range.
     setOverlayError('ov-spots', 'Enter a number between 1 and 30.'); ok = false;
   }
 
@@ -95,6 +102,7 @@ function handleOverlaySubmit(event) {
 
   var spotsCount = parseInt(document.getElementById('ov-spots').value, 10);
 
+  // Build the new game object from the form values.
   var newGame = {
     id:         Date.now(),
     location:   document.getElementById('ov-location').value.trim(),
@@ -114,9 +122,7 @@ function handleOverlaySubmit(event) {
   closeOverlay();
   showToast('Game posted! Get ready to play. 🏐', 'success');
 
-  // If the current page registered a callback, call it
-  // (landing.js sets window.onGamePosted = renderLandingGames,
-  //  app.js sets window.onGamePosted = renderGames, etc.)
+  // If the current page gave us a refresh function, run it now.
   if (typeof window.onGamePosted === 'function') {
     window.onGamePosted();
   }
@@ -129,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var form = document.getElementById('overlay-form');
   if (form) form.addEventListener('submit', handleOverlaySubmit);
 
-  // Set the minimum date to today
+  // The date picker should not allow past dates.
   var dateInput = document.getElementById('ov-date');
   if (dateInput) dateInput.min = new Date().toISOString().split('T')[0];
 

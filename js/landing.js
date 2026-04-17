@@ -8,6 +8,7 @@ function renderLandingGames() {
   var feed = document.getElementById('landing-games-feed');
   if (!feed) return;
 
+  // Show only future games, sort them, then keep the first 3.
   var games = getGames()
     .filter(isUpcoming)
     .sort(function (a, b) {
@@ -29,11 +30,13 @@ function renderLandingGames() {
 }
 
 function buildLandingCard(game) {
+  // Build the CSS class name for the skill badge.
   var skillClass = 'skill-' + game.skill.toLowerCase().replace(/\s+/g, '-');
   var isFull     = game.spotsLeft === 0;
   var spotsLeft  = game.spotsLeft;
   var totalSpots = game.totalSpots;
 
+  // Choose the bar colour based on how many spots are left.
   var pct = Math.round((spotsLeft / totalSpots) * 100);
   var fillClass;
   if (isFull)         { fillClass = 'spots-fill-none'; }
@@ -45,6 +48,7 @@ function buildLandingCard(game) {
     ? '<span class="spots-full-label">Game Full</span>'
     : spotsLeft + ' of ' + totalSpots + ' spots open';
 
+  // Show notes only when the game has notes.
   var notesHTML = game.notes
     ? '<div class="card-notes">' + escapeHTML(game.notes) + '</div>'
     : '';
@@ -77,7 +81,7 @@ function buildLandingCard(game) {
 window.onGamePosted = renderLandingGames;
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Seed sample data on first visit
+  // Add sample games only if there is nothing saved yet.
   if (getGames().length === 0) {
     saveGames(seedSampleGames());
   }
