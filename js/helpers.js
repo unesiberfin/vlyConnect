@@ -89,7 +89,6 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
-
 // ---- Confirm dialog ----
 // Replaces the browser's native confirm() with a styled modal.
 //
