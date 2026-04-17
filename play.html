@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Play — vlyConnect</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+
+    <!-- ============ HEADER ============ -->
+    <header>
+      <div class="header-inner">
+
+        <a href="index.html" class="logo">
+          <span class="logo-icon-wrap">🏐</span>
+          <span class="logo-text">vly<strong>Connect</strong></span>
+        </a>
+
+        <nav class="main-nav">
+          <ul class="header-nav">
+            <li><a href="play.html" class="active">Play</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+          <div class="nav-divider"></div>
+          <button class="btn-nav" onclick="openOverlay()">+ Post a Game</button>
+        </nav>
+
+      </div>
+    </header>
+
+    <!-- ============ BROWSE CONTENT ============ -->
+    <main class="play-main" id="browse-section">
+
+      <div class="play-header">
+        <h1>Find a Game</h1>
+        <p>Browse upcoming volleyball sessions and claim your spot.</p>
+      </div>
+
+      <!-- Search + filter bar -->
+      <div class="browse-header">
+        <div class="browse-title-row">
+          <div class="section-title">
+            <span>Upcoming Games</span>
+            <span id="game-count" class="count-badge">0</span>
+          </div>
+        </div>
+        <div class="filters">
+          <input type="text" id="search" placeholder="Search by location…" autocomplete="off" />
+          <select id="filter-skill">
+            <option value="">All Skill Levels</option>
+            <option value="All Levels">All Levels</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Game cards render here -->
+      <div id="games-feed"></div>
+
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <p>vlyConnect &mdash; No accounts. No friction. Just play.</p>
+    </footer>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <!-- Confirm dialog -->
+    <div id="confirm-backdrop" class="confirm-backdrop"></div>
+    <div id="confirm-dialog" class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="confirm-topbar"></div>
+      <div class="confirm-content">
+        <div id="confirm-icon-wrap" class="confirm-icon-wrap">⚠️</div>
+        <h2 id="confirm-title" class="confirm-title">Are you sure?</h2>
+        <p id="confirm-msg" class="confirm-msg"></p>
+        <div id="confirm-note" class="confirm-note">Spot will reopen</div>
+        <div class="confirm-actions">
+          <button id="confirm-cancel" class="btn btn-confirm-cancel" type="button">Cancel</button>
+          <button id="confirm-ok" class="btn btn-confirm-warning" type="button">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ POST GAME OVERLAY ============ -->
+    <div id="overlay-backdrop" class="overlay-backdrop" onclick="closeOverlay()"></div>
+    <div id="overlay-panel" class="overlay-panel" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
+      <div class="overlay-header">
+        <h2 id="overlay-title" class="overlay-title">Post a Game</h2>
+        <button class="overlay-close" onclick="closeOverlay()" aria-label="Close">✕</button>
+      </div>
+      <div class="overlay-body">
+        <form id="overlay-form" novalidate>
+
+          <div class="form-group">
+            <label for="ov-location">Location <span class="required">*</span></label>
+            <input type="text" id="ov-location" name="location"
+                   placeholder="e.g. Westboro Beach, Ottawa" autocomplete="off" />
+            <span class="error-msg" id="ov-location-error"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ov-date">Date <span class="required">*</span></label>
+              <input type="date" id="ov-date" name="date" />
+              <span class="error-msg" id="ov-date-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="ov-time">Time <span class="required">*</span></label>
+              <input type="time" id="ov-time" name="time" />
+              <span class="error-msg" id="ov-time-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ov-skill">Skill Level <span class="required">*</span></label>
+              <select id="ov-skill" name="skill">
+                <option value="">Select level…</option>
+                <option value="All Levels">All Levels</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+              <span class="error-msg" id="ov-skill-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="ov-spots">Open Spots <span class="required">*</span></label>
+              <input type="number" id="ov-spots" name="spots" min="1" max="30" placeholder="e.g. 6" />
+              <span class="error-msg" id="ov-spots-error"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ov-notes">Notes <span class="optional">(optional)</span></label>
+            <textarea id="ov-notes" name="notes"
+                      placeholder="Any details players should know…"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">Post Game 🏐</button>
+
+        </form>
+      </div>
+    </div>
+
+    <script src="js/helpers.js"></script>
+    <script src="js/overlay.js"></script>
+    <script src="js/app.js"></script>
+
+  </body>
+</html>

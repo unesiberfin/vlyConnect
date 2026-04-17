@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Details — vlyConnect</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+
+    <!-- ============ HEADER ============ -->
+    <header>
+      <div class="header-inner">
+
+        <a href="index.html" class="logo">
+          <span class="logo-icon-wrap">🏐</span>
+          <span class="logo-text">vly<strong>Connect</strong></span>
+        </a>
+
+        <nav class="main-nav">
+          <ul class="header-nav">
+            <li><a href="play.html">Play</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+          <div class="nav-divider"></div>
+          <a href="play.html" class="btn-nav">+ Post a Game</a>
+        </nav>
+
+      </div>
+    </header>
+
+    <!-- ============ DETAIL CONTENT ============ -->
+    <main class="detail-main">
+      <a href="play.html" class="back-link">← Back to all games</a>
+
+      <!-- JS will fill this div in -->
+      <div id="detail-content"></div>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <p>vlyConnect &mdash; No accounts. No friction. Just play.</p>
+    </footer>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <!-- Confirm dialog -->
+    <div id="confirm-backdrop" class="confirm-backdrop"></div>
+    <div id="confirm-dialog" class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="confirm-topbar"></div>
+      <div class="confirm-content">
+        <div id="confirm-icon-wrap" class="confirm-icon-wrap">⚠️</div>
+        <h2 id="confirm-title" class="confirm-title">Are you sure?</h2>
+        <p id="confirm-msg" class="confirm-msg"></p>
+        <div id="confirm-note" class="confirm-note">Spot will reopen</div>
+        <div class="confirm-actions">
+          <button id="confirm-cancel" class="btn btn-confirm-cancel" type="button">Cancel</button>
+          <button id="confirm-ok" class="btn btn-confirm-warning" type="button">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/helpers.js"></script>
+    <script src="js/game.js"></script>
+  </body>
+</html>
